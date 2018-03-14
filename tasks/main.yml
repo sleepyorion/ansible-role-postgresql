@@ -1,0 +1,10 @@
+
+- include: "yum_install_{{ansible_os_family}}.yml"
+  when: pg_install_mode == "yum_repo"
+
+- name: Config Postgresql service 
+  service:
+    name: postgresql-{{ pg_version }}
+    enabled: yes
+    state: started
+  become: yes

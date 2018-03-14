@@ -1,0 +1,10 @@
+
+pg_install_mode: yum_repo
+pg_version: 9.2
+pg_version_short: "{{ pg_version | regex_replace('\\.','') }}"
+pg_gpg_key: https://download.postgresql.org/pub/repos/yum/RPM-GPG-KEY-PGDG-{{ pg_version_short }}
+pg_yum_baseurl: https://download.postgresql.org/pub/repos/yum/{{ pg_version }}/redhat/rhel-$releasever-$basearch
+pg_packages:
+  - "postgresql{{ pg_version_short }}-server"
+  - "postgresql{{ pg_version_short }}-contrib"
+  - postgresql-devel

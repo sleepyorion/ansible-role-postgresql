@@ -1,0 +1,6 @@
+[postgresql]
+name=PostgreSQL {{ pg_version }} $releasever - $basearch
+baseurl={{ pg_yum_baseurl }}
+enabled=1
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-PGDG-{{ pg_version | regex_replace('\.','') }}

@@ -1,0 +1,33 @@
+- name: Add Postgresql GPG key.
+  rpm_key:
+    key: "{{ pg_gpg_key }}"
+    state: present
+  become: yes
+
+- name: create Postgresql repo
+  template: src=postgresql_repo.j2 dest=/etc/yum.repos.d/postgresql.repo
+            owner=root group=root mode=0644
+  become: yes
+
+- name: Install postgresql
+  yum: pkg="{{ package }}" state=installed
+  with_items: "{{ pg_packages }}"
+  loop_control:
+    loop_var: package
+  become: yes
+
+- name: Check data dir
+  command: ls /var/lib/pgsql/{{ pg_version }}/data
+  register: data_dir_check
+  become: yes
+
+- name: Initialize database
+  command: /usr/pgsql-{{ pg_version }}/bin/postgresql{{ pg_version | regex_replace('\.','') }}-setup initdb
+  register: init_db_output
+  when: data_dir_check.stdout == ""
+  become: yes
+
+- name: run handler now
+  meta: flush_handlers
+  when: init_db_output.changed
+
