@@ -3,8 +3,9 @@
     key: "{{ pg_gpg_key }}"
     state: present
   become: yes
+  when: pg_gpg_install_key
 
-- name: create Postgresql repo
+- name: create Postsgresql repo
   template: src=postgresql_repo.j2 dest=/etc/yum.repos.d/postgresql.repo
             owner=root group=root mode=0644
   become: yes
