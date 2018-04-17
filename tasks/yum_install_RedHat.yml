@@ -31,7 +31,13 @@
 - name: Initialize database
   command: service postgresql-{{ pg_version }} initdb
   register: init_db_output
-  when: data_dir_check.stdout == "" and ansible_distribution_major_version < '6'
+  when: (data_dir_check.stdout == "") and (ansible_os_family == "RedHat") and (ansible_distribution_major_version|int <= 6)
+  become: yes
+
+- name: Initialize database
+  command: /usr/pgsql-{{ pg_version }}/bin/postgresql{{ pg_version | regex_replace('\.','') }}-setup initdb
+  register: init_db_output
+  when: (data_dir_check.stdout == "") and (ansible_os_family == "RedHat") and (ansible_distribution_major_version|int >= 7)
   become: yes
 
 - name: run handler now
